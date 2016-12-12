@@ -1,14 +1,15 @@
-var lib = process.env.pome_RPC_COV ? 'lib-cov' : 'lib';
+var lib = process.env.POME_RPC_COV ? 'lib-cov' : 'lib';
 var should = require('should');
 var Mailbox = require('../../' + lib + '/rpc-client/mailboxes/tcp-mailbox');
 var Server = require('../../').server;
 var Tracer = require('../../lib/util/tracer');
+var path = require("path");
 
 var WAIT_TIME = 100;
 
 var paths = [
-  {namespace: 'user', serverType: 'area', path: __dirname + '../../mock-remote/area'},
-  {namespace: 'sys', serverType: 'connector', path: __dirname + '../../mock-remote/connector'}
+  {namespace: 'user', serverType: 'area', path: path.join(__dirname,'../mock-remote/area')},
+  {namespace: 'sys', serverType: 'connector', path: path.join(__dirname, '../mock-remote/connector')}
 ];
 
 var port = 3333;
@@ -86,7 +87,7 @@ describe('tcp mailbox test', function() {
       mailbox.connect(tracer, function(err) {
         should.not.exist(err);
 
-        mailbox.send(tracer, msg, null, function(tracer, err, res) {
+        mailbox.send(tracer, msg, null, function(tracer, err, remoteErr, res) {
           console.log(err, res);
           should.exist(res);
           res.should.equal(msg.args[0] + 1);
@@ -125,19 +126,19 @@ describe('tcp mailbox test', function() {
       mailbox.connect(tracer, function(err) {
         should.not.exist(err);
 
-        mailbox.send(tracer, msg1, null, function(tracer, err, res) {
+        mailbox.send(tracer, msg1, null, function(tracer, err, remoteErr, res) {
           should.exist(res);
           res.should.equal(value + 1);
           callbackCount++;
         });
 
-        mailbox.send(tracer, msg2, null, function(tracer, err, res) {
+        mailbox.send(tracer, msg2, null, function(tracer, err, remoteErr, res) {
           should.exist(res);
           res.should.equal(value + 2);
           callbackCount++;
         });
 
-        mailbox.send(tracer, msg3, null, function(tracer, err, res) {
+        mailbox.send(tracer, msg3, null, function(tracer, err, remoteErr, res) {
           should.exist(res);
           res.should.equal(value + 3);
           callbackCount++;
@@ -182,19 +183,19 @@ describe('tcp mailbox test', function() {
       mailbox.connect(tracer, function(err) {
         should.not.exist(err);
 
-        mailbox.send(tracer, msg1, null, function(tracer, err, res) {
+        mailbox.send(tracer, msg1, null, function(tracer, err, remoteErr, res) {
           should.exist(res);
           res.should.equal(value + 1);
           callbackCount++;
         });
 
-        mailbox.send(tracer, msg2, null, function(tracer, err, res) {
+        mailbox.send(tracer, msg2, null, function(tracer, err, remoteErr, res) {
           should.exist(res);
           res.should.equal(value + 2);
           callbackCount++;
         });
 
-        mailbox.send(tracer, msg3, null, function(tracer, err, res) {
+        mailbox.send(tracer, msg3, null, function(tracer, err, remoteErr, res) {
           should.exist(res);
           res.should.equal(value + 3);
           callbackCount++;
@@ -248,19 +249,19 @@ describe('tcp mailbox test', function() {
       mailbox.connect(tracer, function(err) {
         should.not.exist(err);
 
-        mailbox.send(tracer, msg1, null, function(tracer, err, res) {
+        mailbox.send(tracer, msg1, null, function(tracer, err, remoteErr, res) {
           should.exist(res);
           res.should.equal(value + 1);
           callbackCount++;
         });
 
-        mailbox.send(tracer, msg2, null, function(tracer, err, res) {
+        mailbox.send(tracer, msg2, null, function(tracer, err, remoteErr, res) {
           should.exist(res);
           res.should.equal(value + 2);
           callbackCount++;
         });
 
-        mailbox.send(tracer, msg3, null, function(tracer, err, res) {
+        mailbox.send(tracer, msg3, null, function(tracer, err, remoteErr, res) {
           should.exist(res);
           res.should.equal(value + 3);
           callbackCount++;
@@ -301,7 +302,7 @@ describe('tcp mailbox test', function() {
       mailbox.connect(tracer, function(err) {
         should.not.exist(err);
         mailbox.close();
-        mailbox.send(tracer, msg, null, function(tracer, err, res) {
+        mailbox.send(tracer, msg, null, function(tracer, err, remoteErr, res) {
           should.exist(err);
           done();
         });

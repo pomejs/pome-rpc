@@ -1,11 +1,12 @@
 var Server = require('../../').server;
 var should = require('should');
+var path = require('path');
 
 var WAIT_TIME = 100;
 
 var paths = [
-  {namespace: 'user', path: __dirname + '../../mock-remote/area'},
-  {namespace: 'sys', path: __dirname + '../../mock-remote/connector'}
+  {namespace: 'user', path: path.join(__dirname, '../mock-remote/area')},
+  {namespace: 'sys', path: path.join(__dirname, '../mock-remote/connector')}
 ];
 
 var port = 3333;

@@ -1,4 +1,4 @@
-var lib = process.env.pome_RPC_COV ? 'lib-cov' : 'lib';
+var lib = process.env.POME_RPC_COV ? 'lib-cov' : 'lib';
 var should = require('should');
 var Proxy = require('../../' + lib + '/util/proxy');
 

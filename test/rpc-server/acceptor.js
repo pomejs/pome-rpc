@@ -1,7 +1,8 @@
-var lib = process.env.pome_RPC_COV ? 'lib-cov' : 'lib';
+var lib = process.env.POME_RPC_COV ? 'lib-cov' : 'lib';
 var Acceptor = require('../../' + lib + '/rpc-server/acceptor');
 var should = require('should');
 var Client = require('./client/mock-client');
+var http = require('http');
 
 var WAIT_TIME = 100;
 
@@ -34,6 +35,15 @@ describe('acceptor', function() {
     });
 
     it('should emit an error when listen a port in use', function(done) {
+
+      var server = http.createServer((req, res) => {
+        res.end();
+      });
+      server.on('clientError', (err, socket) => {
+        socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+      });
+      server.listen(80);
+
       var errorCount = 0;
       var acceptor = Acceptor.create(null, function(tracer, msg, cb) {});
 

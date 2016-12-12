@@ -1,15 +1,17 @@
-var lib = process.env.pome_RPC_COV ? 'lib-cov' : 'lib';
+var lib = process.env.POME_RPC_COV ? 'lib-cov' : 'lib';
 var MailStation = require('../../' + lib + '/rpc-client/mailstation');
+var constants = require( '../../' + lib + '/util/constants');
 var should = require('should');
 var Server = require('../../').server;
 var Tracer = require('../../lib/util/tracer');
+var path = require('path');
 
 var WAIT_TIME = 100;
 
 // proxy records
 var records = [
-  {namespace: 'user', serverType: 'area', path: __dirname + '../../mock-remote/area'},
-  {namespace: 'sys', serverType: 'connector', path: __dirname + '../../mock-remote/connector'}
+  {namespace: 'user', serverType: 'area', path: path.join(__dirname,'../mock-remote/area')},
+  {namespace: 'sys', serverType: 'connector', path: path.join(__dirname, '../mock-remote/connector')}
 ];
 
 // server info list
@@ -117,11 +119,9 @@ describe('mail station', function() {
       var count = 0;
       var station = MailStation.create();
       should.exist(station);
-
       for(var i=0, l=serverList.length; i<l; i++) {
         station.addServer(serverList[i]);
       }
-
       var func = function(id) {
         return function(err, remoteId) {
           should.exist(remoteId);
@@ -129,8 +129,7 @@ describe('mail station', function() {
           callbackCount++;
         };
       };
-      var tracer = new Tracer(null, false); 
-
+      var tracer = new Tracer(null, false);
       station.start(function(err) {
         var item;
         for(var i=0, l=serverList.length; i<l; i++) {
@@ -220,20 +219,17 @@ describe('mail station', function() {
       should.exist(station);
 
       station.addServer(server);
-
       station.on('error', function(err) {
         should.exist(err);
-        ('fail to connect to remote server: ' + serverId).should.equal(err.message);
+        constants.RPC_ERROR.FAIL_CONNECT_SERVER.should.equal(err);
         eventCount++;
       });
-
-      var tracer = new Tracer(null, false); 
+      var tracer = new Tracer(null, false);
 
       station.start(function(err) {
         should.exist(station);
         station.dispatch(tracer, serverId, msg, null, function(err) {
           should.exist(err);
-          'message was forward to blackhole.'.should.equal(err.message);
           callbackCount++;
         });
       });
@@ -242,7 +238,7 @@ describe('mail station', function() {
         callbackCount.should.equal(1);
         station.stop();
         done();
-      }, WAIT_TIME);
+      }, WAIT_TIME + 2000);
     });
   });
 
@@ -314,7 +310,9 @@ describe('mail station', function() {
         errorEventCount++;
       };
 
-      var tracer = new Tracer(null, false); 
+      var tracer = new Tracer(null, false);
+
+      station.on('error', func);
 
       station.start(function(err) {
         station.stop();
