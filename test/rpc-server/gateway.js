@@ -2,7 +2,6 @@ var lib = process.env.POME_RPC_COV ? 'lib-cov' : 'lib';
 var Gateway = require('../../' + lib + '/rpc-server/gateway');
 var should = require('should');
 var Client = require('./client/mock-client');
-var http = require('http');
 
 var WAIT_TIME = 100;
 
@@ -50,15 +49,6 @@ describe('gateway', function() {
     });
 
     it('should emit an error when listen a port in use', function(done) {
-
-      var server = http.createServer((req, res) => {
-        res.end();
-      });
-      server.on('clientError', (err, socket) => {
-        socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
-      });
-      server.listen(80);
-
       var errorCount = 0;
       var opts = {services: services, port: 80};
       var gateway = Gateway.create(opts);

@@ -1,6 +1,6 @@
 var lib = process.env.POME_RPC_COV ? 'lib-cov' : 'lib';
 var should = require('should');
-var route = require('../../' + lib + '/rpc-client/router').df;
+var route = require('../../' + lib + '/rpc-client/router').route;
 
 var WAIT_TIME = 20;
 
@@ -12,10 +12,7 @@ describe('router', function() {
     ],
     'area': [
       {id: 'area-servere-1', host: 'localhost',  port: 5555}
-    ],
-    getServersByType:function(tp){
-      return this[tp];
-    }
+    ]
   };
 
   var msg = {

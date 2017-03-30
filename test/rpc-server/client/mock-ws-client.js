@@ -13,7 +13,7 @@ util.inherits(Client, EventEmitter);
 var pro = Client.prototype;
 
 pro.connect = function(host, port, cb) {
-  this.socket = sioClient.connect("http://" + host + ':' + port, {forceNew: true});
+  this.socket = sioClient.connect(host + ':' + port, {'force new connection': true});
 
   var self = this;
   this.socket.on('message', function(pkg) {

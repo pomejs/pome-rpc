@@ -1,14 +1,13 @@
 var should = require('should');
 var Server = require('../../').server;
 var Client = require('../../').client;
-var path = require('path');
 
-var WAIT_TIME = 200;
+var WAIT_TIME = 100;
 
 // proxy records
 var records = [
-  {namespace: 'user', serverType: 'area', path: path.join(__dirname,'../mock-remote/area')},
-  {namespace: 'sys', serverType: 'connector', path: path.join(__dirname, '../mock-remote/connector')}
+  {namespace: 'user', serverType: 'area', path: __dirname + '../../mock-remote/area'},
+  {namespace: 'sys', serverType: 'connector', path: __dirname + '../../mock-remote/connector'}
 ];
 
 // server info list
